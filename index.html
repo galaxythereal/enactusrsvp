@@ -3,28 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enactus Alumni Reunion RSVP</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Enactus Alumni Reunion | RSVP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
-        /* Reset and Base Styles */
+        /* Enhanced Global Reset and Variables */
+        :root {
+            /* Enactus Color Palette */
+            --enactus-primary-yellow: #FFD700;
+            --enactus-primary-blue: #1E90FF;
+            --enactus-secondary-blue: #0066CC;
+            --enactus-accent-orange: #FF6B35;
+            --enactus-gradient: linear-gradient(135deg, #FFD700 0%, #1E90FF 100%);
+            
+            /* Typography */
+            --font-primary: 'Inter', sans-serif;
+            --font-secondary: 'Montserrat', sans-serif;
+            
+            /* Shadows and Elevations */
+            --shadow-subtle: 0 4px 6px rgba(0,0,0,0.08);
+            --shadow-medium: 0 10px 25px rgba(0,0,0,0.1);
+            --shadow-intense: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        :root {
-            --enactus-yellow: #FFD700;
-            --enactus-blue: #1E90FF;
-            --background-light: #F4F6F9;
-            --text-dark: #2C3E50;
-            --accent-gradient: linear-gradient(135deg, #FFD700 0%, #1E90FF 100%);
+            scrollbar-width: thin;
+            scrollbar-color: var(--enactus-primary-blue) transparent;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--background-light);
-            color: var(--text-dark);
+            font-family: var(--font-primary);
+            background: linear-gradient(145deg, #f4f6f9 0%, #e9ecf0 100%);
+            color: #2c3e50;
             line-height: 1.6;
             min-height: 100vh;
             display: flex;
@@ -32,170 +45,148 @@
             align-items: center;
             perspective: 1000px;
             overflow-x: hidden;
+            padding: 20px;
         }
 
+        /* Container Styles */
         .container {
             width: 100%;
-            max-width: 600px;
+            max-width: 750px;
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            border-radius: 25px;
+            box-shadow: var(--shadow-intense);
             overflow: hidden;
             transform: translateZ(0);
-            transition: all 0.6s ease;
+            transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: 2px solid rgba(30,144,255,0.1);
         }
 
-        /* Welcome Section Styles */
-        .welcome-section {
-            background: var(--accent-gradient);
+        /* Enactus Branding Section */
+        .enactus-header {
+            background: var(--enactus-gradient);
             color: white;
-            padding: 40px 30px;
+            padding: 30px;
             text-align: center;
             position: relative;
             overflow: hidden;
         }
 
-        .welcome-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: rgba(255,255,255,0.05);
-            transform: rotate(-45deg);
-            z-index: 1;
+        .enactus-logo {
+            width: 150px;
+            height: auto;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Enhanced Welcome Section */
+        .welcome-section {
+            background: rgba(255,255,255,0.95);
+            padding: 40px;
+            text-align: center;
+            border-bottom: 2px solid rgba(30,144,255,0.1);
         }
 
         .alumni-name {
-            font-size: 2.5rem;
+            font-family: var(--font-secondary);
+            font-size: 2.8rem;
             font-weight: 700;
+            color: var(--enactus-secondary-blue);
             margin-bottom: 15px;
-            text-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .graduation-badge {
             display: inline-block;
-            background: rgba(255,255,255,0.2);
-            padding: 8px 16px;
-            border-radius: 20px;
-            margin-top: 15px;
+            background: var(--enactus-accent-orange);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
             font-weight: 600;
+            font-size: 0.9rem;
+            margin-top: 15px;
         }
 
-        /* RSVP Form Styles */
+        /* Form Styling */
         .rsvp-form {
-            padding: 40px 30px;
-            background: white;
+            padding: 50px;
+            background: #f9fafb;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            position: relative;
         }
 
         .form-label {
             display: block;
             margin-bottom: 10px;
             font-weight: 600;
-            color: var(--text-dark);
+            color: var(--enactus-secondary-blue);
+            transition: all 0.3s ease;
         }
 
         .form-input {
             width: 100%;
-            padding: 12px 20px;
-            border: 2px solid #E0E0E0;
-            border-radius: 10px;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
             font-size: 16px;
             transition: all 0.3s ease;
+            background: white;
         }
 
         .form-input:focus {
             outline: none;
-            border-color: var(--enactus-blue);
+            border-color: var(--enactus-primary-blue);
             box-shadow: 0 0 0 3px rgba(30,144,255,0.1);
-        }
-
-        .form-select {
-            appearance: none;
-            background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M10.3 3.3L6 7.6 1.7 3.3c-.4-.4-1-.4-1.4 0s-.4 1 0 1.4l5 5c.4.4 1 .4 1.4 0l5-5c.4-.4.4-1 0-1.4s-1-.4-1.4 0z' fill='%232C3E50'/%3E%3C/svg%3E") no-repeat right 15px center;
-            background-size: 12px;
-            padding-right: 40px;
         }
 
         .submit-btn {
             width: 100%;
-            padding: 15px;
-            background: var(--accent-gradient);
+            padding: 18px;
+            background: var(--enactus-gradient);
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 15px;
             font-size: 18px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.4s ease;
-            transform: perspective(300px);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .submit-btn:hover {
-            transform: scale(1.02) perspective(300px) rotateX(5deg);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-
-        /* Confirmation Section */
-        .confirmation-section {
-            display: none;
-            text-align: center;
-            padding: 40px 30px;
-            background: var(--background-light);
-        }
-
-        .checkmark {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            display: block;
-            stroke-width: 2;
-            stroke: #fff;
-            stroke-miterlimit: 10;
-            box-shadow: inset 0px 0px 0px var(--enactus-blue);
-            animation: fill 0.4s ease-in-out 0.4s forwards, scale 0.3s ease-in-out 0.9s both;
-            position: relative;
-            margin: 0 auto 20px;
-            background: var(--enactus-blue);
-        }
-
-        .checkmark__check {
-            transform-origin: 50% 50%;
-            stroke-dasharray: 48;
-            stroke-dashoffset: 48;
-            animation: stroke 0.8s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
-        }
-
-        @keyframes stroke {
-            100% {
-                stroke-dashoffset: 0;
-            }
-        }
-
-        @keyframes scale {
-            0%, 100% { transform: none; }
-            50% { transform: scale3d(1.1, 1.1, 1); }
-        }
-
-        @keyframes fill {
-            100% { box-shadow: inset 0px 0px 0px 30px var(--enactus-blue); }
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-medium);
         }
 
         /* Responsive Adjustments */
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             .container {
                 width: 95%;
                 margin: 20px auto;
             }
 
-            .alumni-name {
-                font-size: 2rem;
+            .rsvp-form, .welcome-section {
+                padding: 20px;
             }
+        }
+
+        /* Additional Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
         }
     </style>
 </head>

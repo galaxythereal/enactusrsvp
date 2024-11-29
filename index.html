@@ -266,7 +266,12 @@ const firebaseConfig = {
 
 };
 
+// Add this BEFORE your existing script
+console.log("Firebase Config:", firebaseConfig);
 
+
+// Enable Firestore logging
+firebase.firestore().enableLogging(true);
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
@@ -344,6 +349,72 @@ const alumniId = urlParams.get('=uniqueID123').replace('=', '');
                     });
             });
         });
+
+        document.addEventListener('DOMContentLoaded', () => {
+    // Extract Alumni ID
+    const urlParams = new URLSearchParams(window.location.search);
+    const alumniId = urlParams.get('id'); // Changed from '=uniqueID123'
+
+    console.log("Raw URL Params:", urlParams.toString());
+    console.log("Extracted Alumni ID:", alumniId);
+
+    if (!alumniId) {
+        console.error('No alumni ID found in URL');
+        document.getElementById('alumniName').textContent = 'Invalid Link';
+        document.getElementById('welcomeMessage').textContent = 'Please use a valid invitation link.';
+        return;
+    }
+
+    // Reference to Alumni Document
+    const alumniRef = db.collection('alumni').doc(alumniId);
+
+    // Fetch Alumni Details with Enhanced Error Handling
+    alumniRef.get()
+        .then((doc) => {
+            console.log("Firestore Document Fetch Result:", doc.exists);
+            
+            if (doc.exists) {
+                const alumniData = doc.data();
+                console.log("Fetched Alumni Data:", alumniData);
+
+                // Detailed Logging of Each Field
+                console.log("Name:", alumniData.name);
+                console.log("Welcome Message:", alumniData.welcomeMessage);
+                console.log("Graduation Year:", alumniData.graduationYear);
+
+                // Update DOM Elements
+                document.getElementById('alumniName').textContent = 
+                    alumniData.name || 'Alumni Name Not Found';
+                
+                document.getElementById('welcomeMessage').textContent = 
+                    alumniData.welcomeMessage || 
+                    `Welcome back! We are thrilled to celebrate the Enactus legacy with you.`;
+                
+                document.getElementById('graduationYear').textContent = 
+                    `Enactus Class of ${alumniData.graduationYear || 'Unknown'}`;
+
+                // Pre-fill Form
+                document.getElementById('name').value = alumniData.name || '';
+                document.getElementById('email').value = alumniData.email || '';
+
+            } else {
+                console.error('No document found for alumni ID:', alumniId);
+                
+                // Update UI to show error
+                document.getElementById('alumniName').textContent = 'Alumni Not Found';
+                document.getElementById('welcomeMessage').textContent = 
+                    'The provided invitation link is invalid or expired.';
+            }
+        })
+        .catch((error) => {
+            console.error("Comprehensive Error in Fetching Alumni:", error);
+            
+            // Detailed Error UI
+            document.getElementById('alumniName').textContent = 'Error Loading Data';
+            document.getElementById('welcomeMessage').textContent = 
+                `Error: ${error.message}. Please check your connection.`;
+        });
+});
     </script>
 </body>
 </html>

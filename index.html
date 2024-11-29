@@ -273,148 +273,96 @@ console.log("Firebase Config:", firebaseConfig);
 // Enable Firestore logging
 firebase.firestore().enableLogging(true);
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-        // Page Initialization
-        document.addEventListener('DOMContentLoaded', () => {
-const urlParams = new URLSearchParams(window.location.search);
-const alumniId = urlParams.get('=uniqueID123').replace('=', '');
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const alumniId = urlParams.get('id');
 
-            if (!alumniId) {
-                alert('Invalid invitation link. Please use the unique QR code provided.');
-                return;
-            }
+        console.log("Alumni ID from URL:", alumniId);
 
-            // Fetch Alumni Details
-            const alumniRef = db.collection('alumni').doc(alumniId);
-            alumniRef.get().then((doc) => {
+        if (!alumniId) {
+            showErrorMessage('Invalid invitation link');
+            return;
+        }
+
+        const alumniRef = db.collection('alumni').doc(alumniId);
+
+        alumniRef.get()
+            .then((doc) => {
                 if (doc.exists) {
                     const alumniData = doc.data();
+                    console.log("Alumni Data:", alumniData);
+
+                    // Update Welcome Section
+                    document.getElementById('alumniName').textContent = 
+                        alumniData.name || 'Alumni';
                     
-                    // Populate Welcome Section
-                    document.getElementById('alumniName').textContent = alumniData.name;
                     document.getElementById('welcomeMessage').textContent = 
                         alumniData.welcomeMessage || 
-                        `Welcome back, ${alumniData.name}! We are thrilled to celebrate the Enactus legacy with you.`;
+                        `Welcome back! We're excited to celebrate with you.`;
+                    
                     document.getElementById('graduationYear').textContent = 
-                        `Enactus Class of ${alumniData.graduationYear}`;
+                        `Enactus Class of ${alumniData.graduationYear || 'Unknown'}`;
 
                     // Pre-fill Form
-                    document.getElementById('name').value = alumniData.name;
-                    document.getElementById('email').value = alumniData.email;
+                    document.getElementById('name').value = alumniData.name || '';
+                    document.getElementById('email').value = alumniData.email || '';
                 } else {
-                    alert('Alumni record not found.');
+                    showErrorMessage('Alumni record not found');
                 }
-            }).catch((error) => {
-                console.error("Error fetching alumni details:", error);
-                alert('Unable to load alumni information.');
+            })
+            .catch((error) => {
+                console.error("Error fetching alumni:", error);
+                showErrorMessage('Unable to load alumni information');
             });
 
-            // RSVP Form Submission
-            const rsvpForm = document.getElementById('rsvpForm');
-            const rsvpFormSection = document.getElementById('rsvpFormSection');
-            const confirmationSection = document.getElementById('confirmationSection');
+        // RSVP Form Submission
+        const rsvpForm = document.getElementById('rsvpForm');
+        const rsvpFormSection = document.getElementById('rsvpFormSection');
+        const confirmationSection = document.getElementById('confirmationSection');
 
-            rsvpForm.addEventListener('submit', (e) => {
-                e.preventDefault();
+        rsvpForm.addEventListener('submit', (e) => {
+            e.preventDefault();
 
-                const rsvpData = {
-                    alumniId: alumniId,
-                    name: document.getElementById('name').value,
-                    email: document.getElementById('email').value,
-                    mealPreference: document.getElementById('mealPreference').value,
-                    notes: document.getElementById('notes').value,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                };
+            const rsvpData = {
+                alumniId: alumniId,
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                mealPreference: document.getElementById('mealPreference').value,
+                notes: document.getElementById('notes').value,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            };
 
-                // Save RSVP to Firestore
-                db.collection('rsvps').add(rsvpData)
-                    .then(() => {
-                        // Update Alumni RSVP Status
-                        return alumniRef.update({ rsvpStatus: 'confirmed' });
-                    })
-                    .then(() => {
-                        // Show Confirmation
-                        rsvpFormSection.style.display = 'none';
-                        confirmationSection.style.display = 'block';
-                        document.getElementById('confirmationName').textContent = 
-                            `Thank You, ${rsvpData.name}!`;
-                        document.getElementById('confirmationDetails').textContent = 
-                            `We've reserved your seat for a ${rsvpData.mealPreference} meal.`;
-                    })
-                    .catch((error) => {
-                        console.error("Error submitting RSVP:", error);
-                        alert('Unable to submit RSVP. Please try again.');
-                    });
-            });
+            // Save RSVP to Firestore
+            db.collection('rsvps').add(rsvpData)
+                .then(() => {
+                    // Update Alumni RSVP Status
+                    return alumniRef.update({ rsvpStatus: 'confirmed' });
+                })
+                .then(() => {
+                    // Show Confirmation
+                    rsvpFormSection.style.display = 'none';
+                    confirmationSection.style.display = 'block';
+                    document.getElementById('confirmationName').textContent = 
+                        `Thank You, ${rsvpData.name}!`;
+                    document.getElementById('confirmationDetails').textContent = 
+                        `We've reserved your seat for a ${rsvpData.mealPreference} meal.`;
+                })
+                .catch((error) => {
+                    console.error("RSVP Submission Error:", error);
+                    alert('Unable to submit RSVP. Please try again.');
+                });
         });
 
-        document.addEventListener('DOMContentLoaded', () => {
-    // Extract Alumni ID
-    const urlParams = new URLSearchParams(window.location.search);
-    const alumniId = urlParams.get('id'); // Changed from '=uniqueID123'
-
-    console.log("Raw URL Params:", urlParams.toString());
-    console.log("Extracted Alumni ID:", alumniId);
-
-    if (!alumniId) {
-        console.error('No alumni ID found in URL');
-        document.getElementById('alumniName').textContent = 'Invalid Link';
-        document.getElementById('welcomeMessage').textContent = 'Please use a valid invitation link.';
-        return;
-    }
-
-    // Reference to Alumni Document
-    const alumniRef = db.collection('alumni').doc(alumniId);
-
-    // Fetch Alumni Details with Enhanced Error Handling
-    alumniRef.get()
-        .then((doc) => {
-            console.log("Firestore Document Fetch Result:", doc.exists);
-            
-            if (doc.exists) {
-                const alumniData = doc.data();
-                console.log("Fetched Alumni Data:", alumniData);
-
-                // Detailed Logging of Each Field
-                console.log("Name:", alumniData.name);
-                console.log("Welcome Message:", alumniData.welcomeMessage);
-                console.log("Graduation Year:", alumniData.graduationYear);
-
-                // Update DOM Elements
-                document.getElementById('alumniName').textContent = 
-                    alumniData.name || 'Alumni Name Not Found';
-                
-                document.getElementById('welcomeMessage').textContent = 
-                    alumniData.welcomeMessage || 
-                    `Welcome back! We are thrilled to celebrate the Enactus legacy with you.`;
-                
-                document.getElementById('graduationYear').textContent = 
-                    `Enactus Class of ${alumniData.graduationYear || 'Unknown'}`;
-
-                // Pre-fill Form
-                document.getElementById('name').value = alumniData.name || '';
-                document.getElementById('email').value = alumniData.email || '';
-
-            } else {
-                console.error('No document found for alumni ID:', alumniId);
-                
-                // Update UI to show error
-                document.getElementById('alumniName').textContent = 'Alumni Not Found';
-                document.getElementById('welcomeMessage').textContent = 
-                    'The provided invitation link is invalid or expired.';
-            }
-        })
-        .catch((error) => {
-            console.error("Comprehensive Error in Fetching Alumni:", error);
-            
-            // Detailed Error UI
-            document.getElementById('alumniName').textContent = 'Error Loading Data';
-            document.getElementById('welcomeMessage').textContent = 
-                `Error: ${error.message}. Please check your connection.`;
-        });
-});
-    </script>
+        function showErrorMessage(message) {
+            document.getElementById('alumniName').textContent = 'Error';
+            document.getElementById('welcomeMessage').textContent = message;
+            document.getElementById('graduationYear').textContent = '';
+        }
+    });
+</script>
 </body>
 </html>

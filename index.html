@@ -3,96 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enactus Alumni Reunion | RSVP</title>
+    <title>Enactus Alumni Reunion | Exclusive RSVP</title>
     
-    <!-- Advanced Typography and Icon Integration -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Montserrat:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- Premium Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Sora:wght@400;600;700&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* Comprehensive Design System */
         :root {
-            /* Enactus Extended Color Palette */
-            --enactus-primary-yellow: #FFD700;
-            --enactus-primary-blue: #1E90FF;
-            --enactus-secondary-blue: #0066CC;
-            --enactus-accent-orange: #FF6B35;
-            --enactus-soft-blue: #E6F2FF;
-            --enactus-dark-navy: #123456;
+            /* Sophisticated Color Palette */
+            --color-deep-space: #0F1020;           /* Deep midnight navy */
+            --color-electric-blue: #2E5BE6;        /* Vibrant professional blue */
+            --color-glacier-cyan: #00B4D8;         /* Modern accent cyan */
+            --color-titanium-gray: #353C52;        /* Sophisticated gray */
+            --color-frost-white: #F5F7FA;          /* Soft background white */
+            --color-emerald-accent: #10B981;       /* Elegant success green */
             
-            /* Advanced Gradient Variants */
-            --enactus-gradient-primary: linear-gradient(135deg, #FFD700 0%, #1E90FF 100%);
-            --enactus-gradient-secondary: linear-gradient(145deg, #0066CC 0%, #1E90FF 100%);
+            /* Refined Gradients */
+            --gradient-primary: linear-gradient(135deg, var(--color-electric-blue) 0%, var(--color-glacier-cyan) 100%);
+            --gradient-secondary: linear-gradient(145deg, var(--color-deep-space) 0%, var(--color-titanium-gray) 100%);
             
-            /* Typography Hierarchy */
+            /* Typography Scale */
             --font-primary: 'Inter', sans-serif;
-            --font-secondary: 'Montserrat', sans-serif;
-            --font-accent: 'Poppins', sans-serif;
+            --font-secondary: 'Sora', sans-serif;
+            --font-accent: 'Manrope', sans-serif;
             
             /* Advanced Shadow System */
-            --shadow-subtle: 0 4px 6px rgba(0,0,0,0.08);
-            --shadow-medium: 0 10px 25px rgba(0,0,0,0.1);
-            --shadow-intense: 0 15px 35px rgba(0,0,0,0.15);
-            --shadow-hover: 0 20px 40px rgba(30,144,255,0.2);
-            
-            /* Layout & Spacing */
-            --border-radius-soft: 20px;
-            --border-radius-hard: 10px;
+            --shadow-subtle: 0 4px 12px rgba(46,91,230,0.1);
+            --shadow-medium: 0 10px 30px rgba(46,91,230,0.15);
+            --shadow-intense: 0 15px 45px rgba(46,91,230,0.2);
         }
 
-        /* Comprehensive Reset and Base Styling */
+        /* Comprehensive Reset */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            scroll-behavior: smooth;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            transition: all 0.3s ease;
         }
 
         body {
             font-family: var(--font-primary);
-            background: linear-gradient(145deg, #f4f6f9 0%, #e9ecf0 100%);
-            color: var(--enactus-dark-navy);
-            line-height: 1.6;
+            background: linear-gradient(135deg, var(--color-frost-white) 0%, #E9ECF3 100%);
+            color: var(--color-deep-space);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            perspective: 1500px;
+            line-height: 1.6;
             overflow-x: hidden;
             padding: 40px 20px;
         }
 
-        /* Advanced Container Design */
         .reunion-container {
             width: 100%;
-            max-width: 900px;
+            max-width: 1200px;
             background: white;
-            border-radius: 40px;
+            border-radius: 32px;
             box-shadow: 
-                0 50px 100px rgba(30,144,255,0.1), 
-                0 15px 35px rgba(0,0,0,0.08);
-            overflow: hidden;
+                0 50px 100px rgba(46,91,230,0.08), 
+                0 15px 35px rgba(46,91,230,0.05);
             display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            min-height: 700px;
-            transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
-            position: relative;
+            grid-template-columns: 1.3fr 1.7fr;
+            min-height: 850px;
+            overflow: hidden;
         }
 
-        /* Branding Side Panel */
+        /* Branding Panel */
         .branding-panel {
-            background: var(--enactus-gradient-primary);
+            background: var(--gradient-primary);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 50px 30px;
+            padding: 60px 40px;
             color: white;
             text-align: center;
             position: relative;
-            overflow: hidden;
         }
 
         .branding-panel::before {
@@ -107,29 +93,33 @@
         }
 
         .enactus-logo {
-            width: 200px;
-            margin-bottom: 30px;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+            width: 280px;
+            margin-bottom: 40px;
+            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.2));
+            z-index: 2;
+            position: relative;
         }
 
         .branding-title {
-            font-family: var(--font-accent);
-            font-size: 2.5rem;
+            font-family: var(--font-secondary);
+            font-size: 3.2rem;
             font-weight: 700;
-            margin-bottom: 20px;
-            letter-spacing: 1px;
+            margin-bottom: 25px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
         }
 
         .branding-subtitle {
-            font-weight: 300;
-            max-width: 350px;
-            line-height: 1.8;
+            max-width: 420px;
+            line-height: 2;
+            font-size: 1.1rem;
+            opacity: 0.9;
         }
 
         /* RSVP Form Section */
         .rsvp-form-section {
-            background: var(--enactus-soft-blue);
-            padding: 50px;
+            background: var(--color-frost-white);
+            padding: 70px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -137,74 +127,75 @@
 
         .form-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 50px;
         }
 
         .form-title {
             font-family: var(--font-secondary);
-            font-size: 2.2rem;
-            color: var(--enactus-secondary-blue);
-            margin-bottom: 15px;
+            font-size: 2.8rem;
+            color: var(--color-electric-blue);
+            margin-bottom: 20px;
+            font-weight: 700;
         }
 
         .form-description {
-            color: rgba(0,0,0,0.6);
-            max-width: 400px;
+            color: var(--color-titanium-gray);
+            max-width: 500px;
             margin: 0 auto;
+            line-height: 1.8;
         }
 
-        /* Enhanced Form Elements */
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 35px;
             position: relative;
         }
 
         .form-label {
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             font-weight: 600;
-            color: var(--enactus-secondary-blue);
-            transition: all 0.3s ease;
+            color: var(--color-electric-blue);
+            font-family: var(--font-secondary);
         }
 
         .form-input {
             width: 100%;
-            padding: 15px 20px;
-            border: 2px solid rgba(30,144,255,0.2);
-            border-radius: var(--border-radius-soft);
+            padding: 20px 25px;
+            border: 2px solid rgba(46,91,230,0.15);
+            border-radius: 16px;
             font-size: 16px;
-            transition: all 0.3s ease;
             background: white;
+            font-family: var(--font-primary);
         }
 
         .form-input:focus {
             outline: none;
-            border-color: var(--enactus-primary-blue);
-            box-shadow: 0 0 0 4px rgba(30,144,255,0.1);
+            border-color: var(--color-electric-blue);
+            box-shadow: 0 0 0 4px rgba(46,91,230,0.1);
         }
 
         .submit-button {
             width: 100%;
-            padding: 18px;
-            background: var(--enactus-gradient-secondary);
+            padding: 22px;
+            background: var(--gradient-secondary);
             color: white;
             border: none;
-            border-radius: var(--border-radius-soft);
+            border-radius: 20px;
             font-size: 18px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            box-shadow: var(--shadow-medium);
         }
 
         .submit-button:hover {
             transform: translateY(-5px);
-            box-shadow: var(--shadow-hover);
+            box-shadow: var(--shadow-intense);
         }
 
-        /* Responsive Design */
-        @media (max-width: 868px) {
+        /* Responsive Adjustments */
+        @media (max-width: 1024px) {
             .reunion-container {
                 grid-template-columns: 1fr;
             }
@@ -212,59 +203,54 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Welcome Section -->
-        <section class="welcome-section">
-            <div id="welcome-content">
-                <h1 class="alumni-name" id="alumniName">Loading...</h1>
-                <p id="welcomeMessage">Preparing your personalized invitation...</p>
-                <span class="graduation-badge" id="graduationYear">Enactus Class</span>
-            </div>
-        </section>
+    <div class="reunion-container">
+        <div class="branding-panel">
+            <img src="/api/placeholder/280/180" alt="Enactus Logo" class="enactus-logo">
+            <h2 class="branding-title">Alumni Reunion</h2>
+            <p class="branding-subtitle">
+                Reconnect with purpose. Amplify your entrepreneurial journey with a community that transforms ideas into impactful solutions.
+            </p>
+        </div>
 
-        <!-- RSVP Form Section -->
-        <section class="rsvp-form" id="rsvpFormSection">
+        <div class="rsvp-form-section">
+            <div class="form-header">
+                <h1 class="form-title">Your Exclusive Invitation</h1>
+                <p class="form-description">
+                    Secure your place at this year's most anticipated Enactus alumni gathering. Your network, your impact, your legacy.
+                </p>
+            </div>
+
             <form id="rsvpForm">
                 <div class="form-group">
-                    <label for="name" class="form-label">Name</label>
-                    <input type="text" id="name" class="form-input" required>
+                    <label for="name" class="form-label">Full Name</label>
+                    <input type="text" id="name" class="form-input" placeholder="Enter your full name" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" id="email" class="form-input" required>
+                    <label for="email" class="form-label">Professional Email</label>
+                    <input type="email" id="email" class="form-input" placeholder="your.professional@email.com" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="mealPreference" class="form-label">Meal Preference</label>
-                    <select id="mealPreference" class="form-input form-select" required>
-                        <option value="">Select Meal</option>
-                        <option value="chicken">Chicken</option>
-                        <option value="beef">Beef</option>
-                        <option value="vegetarian">Vegetarian</option>
+                    <label for="mealPreference" class="form-label">Culinary Selection</label>
+                    <select id="mealPreference" class="form-input" required>
+                        <option value="">Select Your Dining Experience</option>
+                        <option value="chicken">Refined Herb-Crusted Chicken</option>
+                        <option value="beef">Premium Aged Beef Tenderloin</option>
+                        <option value="vegetarian">Seasonal Vegetarian Composition</option>
                     </select>
                 </div>
                 
                 <div class="form-group">
-                    <label for="notes" class="form-label">Special Notes (Optional)</label>
-                    <textarea id="notes" class="form-input" rows="3"></textarea>
+                    <label for="notes" class="form-label">Additional Considerations</label>
+                    <textarea id="notes" class="form-input" rows="3" placeholder="Any specific requirements or notes?"></textarea>
                 </div>
                 
-                <button type="submit" class="submit-btn">Confirm RSVP</button>
+                <button type="submit" class="submit-button">Confirm Attendance</button>
             </form>
-        </section>
-
-        <!-- Confirmation Section -->
-        <section class="confirmation-section" id="confirmationSection">
-            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
-                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-            </svg>
-            <h2 id="confirmationName">Thank You!</h2>
-            <p id="confirmationDetails">Your RSVP has been received.</p>
-        </section>
+        </div>
     </div>
-
+</body>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script>

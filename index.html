@@ -4,197 +4,341 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enactus Alumni Reunion RSVP</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .animate-fade-in {
-            animation: fadeIn 0.8s ease-out;
+
+        :root {
+            --enactus-yellow: #FFD700;
+            --enactus-blue: #1E90FF;
+            --background-light: #F4F6F9;
+            --text-dark: #2C3E50;
+            --accent-gradient: linear-gradient(135deg, #FFD700 0%, #1E90FF 100%);
         }
-        .enactus-gradient {
-            background: linear-gradient(135deg, #FFD700 0%, #1E90FF 100%);
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transform: translateZ(0);
+            transition: all 0.6s ease;
+        }
+
+        /* Welcome Section Styles */
+        .welcome-section {
+            background: var(--accent-gradient);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255,255,255,0.05);
+            transform: rotate(-45deg);
+            z-index: 1;
+        }
+
+        .alumni-name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .graduation-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        /* RSVP Form Styles */
+        .rsvp-form {
+            padding: 40px 30px;
+            background: white;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--enactus-blue);
+            box-shadow: 0 0 0 3px rgba(30,144,255,0.1);
+        }
+
+        .form-select {
+            appearance: none;
+            background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M10.3 3.3L6 7.6 1.7 3.3c-.4-.4-1-.4-1.4 0s-.4 1 0 1.4l5 5c.4.4 1 .4 1.4 0l5-5c.4-.4.4-1 0-1.4s-1-.4-1.4 0z' fill='%232C3E50'/%3E%3C/svg%3E") no-repeat right 15px center;
+            background-size: 12px;
+            padding-right: 40px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            transform: perspective(300px);
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.02) perspective(300px) rotateX(5deg);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        /* Confirmation Section */
+        .confirmation-section {
+            display: none;
+            text-align: center;
+            padding: 40px 30px;
+            background: var(--background-light);
+        }
+
+        .checkmark {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: block;
+            stroke-width: 2;
+            stroke: #fff;
+            stroke-miterlimit: 10;
+            box-shadow: inset 0px 0px 0px var(--enactus-blue);
+            animation: fill 0.4s ease-in-out 0.4s forwards, scale 0.3s ease-in-out 0.9s both;
+            position: relative;
+            margin: 0 auto 20px;
+            background: var(--enactus-blue);
+        }
+
+        .checkmark__check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke 0.8s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+        }
+
+        @keyframes stroke {
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes scale {
+            0%, 100% { transform: none; }
+            50% { transform: scale3d(1.1, 1.1, 1); }
+        }
+
+        @keyframes fill {
+            100% { box-shadow: inset 0px 0px 0px 30px var(--enactus-blue); }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+                margin: 20px auto;
+            }
+
+            .alumni-name {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex items-center justify-center font-sans">
-    <div id="app" class="w-full max-w-md mx-auto p-6">
+<body>
+    <div class="container">
         <!-- Welcome Section -->
-        <div id="welcomeSection" class="hidden bg-white shadow-2xl rounded-2xl p-8 text-center enactus-gradient animate-fade-in">
-            <div class="bg-white bg-opacity-90 rounded-xl p-6">
-                <h1 id="welcomeTitle" class="text-3xl font-bold mb-4 text-blue-900"></h1>
-                <p id="welcomeSubtitle" class="text-lg text-gray-700 mb-6"></p>
-                <div id="graduationBadge" class="inline-block bg-yellow-400 text-blue-900 px-4 py-2 rounded-full text-sm font-semibold mb-6"></div>
+        <section class="welcome-section">
+            <div id="welcome-content">
+                <h1 class="alumni-name" id="alumniName">Loading...</h1>
+                <p id="welcomeMessage">Preparing your personalized invitation...</p>
+                <span class="graduation-badge" id="graduationYear">Enactus Class</span>
             </div>
-        </div>
+        </section>
 
         <!-- RSVP Form Section -->
-        <div id="rsvpSection" class="hidden bg-white shadow-2xl rounded-2xl p-8 mt-6 animate-fade-in">
-            <form id="rsvpForm" class="space-y-6">
-                <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                    <input type="text" id="name" name="name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-300">
+        <section class="rsvp-form" id="rsvpFormSection">
+            <form id="rsvpForm">
+                <div class="form-group">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" id="name" class="form-input" required>
                 </div>
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                    <input type="email" id="email" name="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-300">
+                
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" class="form-input" required>
                 </div>
-                <div>
-                    <label for="mealPreference" class="block text-sm font-medium text-gray-700">Meal Preference</label>
-                    <select id="mealPreference" name="mealPreference" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-300">
+                
+                <div class="form-group">
+                    <label for="mealPreference" class="form-label">Meal Preference</label>
+                    <select id="mealPreference" class="form-input form-select" required>
+                        <option value="">Select Meal</option>
                         <option value="chicken">Chicken</option>
                         <option value="beef">Beef</option>
                         <option value="vegetarian">Vegetarian</option>
                     </select>
                 </div>
-                <div>
-                    <label for="notes" class="block text-sm font-medium text-gray-700">Special Notes</label>
-                    <textarea id="notes" name="notes" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-300"></textarea>
+                
+                <div class="form-group">
+                    <label for="notes" class="form-label">Special Notes (Optional)</label>
+                    <textarea id="notes" class="form-input" rows="3"></textarea>
                 </div>
-                <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-                    Confirm RSVP
-                </button>
+                
+                <button type="submit" class="submit-btn">Confirm RSVP</button>
             </form>
-        </div>
+        </section>
 
         <!-- Confirmation Section -->
-        <div id="confirmationSection" class="hidden bg-white shadow-2xl rounded-2xl p-8 text-center animate-fade-in">
-            <h2 class="text-3xl font-bold text-green-600 mb-4">Thank You!</h2>
-            <div id="confirmationDetails" class="text-gray-700 space-y-3"></div>
-            <a href="#" id="backToWelcome" class="mt-6 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300">
-                Back to Welcome
-            </a>
-        </div>
+        <section class="confirmation-section" id="confirmationSection">
+            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+            </svg>
+            <h2 id="confirmationName">Thank You!</h2>
+            <p id="confirmationDetails">Your RSVP has been received.</p>
+        </section>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script>
         // Firebase Configuration (Replace with your actual Firebase config)
-const firebaseConfig = {
-
-  apiKey: "AIzaSyDDdhJ31y8R_NSd08yMprlDg2tbQPd4ii0",
-
-  authDomain: "enactusrsvp-3a4c0.firebaseapp.com",
-
-  projectId: "enactusrsvp-3a4c0",
-
-  storageBucket: "enactusrsvp-3a4c0.firebasestorage.app",
-
-  messagingSenderId: "34193606713",
-
-  appId: "1:34193606713:web:f713754817f79b482065e8",
-
-  measurementId: "G-TVK059C0P4"
-
-};
-
-
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID"
+        };
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Utility Functions
-        function getQueryParam(param) {
+        // Page Initialization
+        document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
-        }
+            const alumniId = urlParams.get('id');
 
-        // Page State Management
-        const sections = {
-            welcome: document.getElementById('welcomeSection'),
-            rsvp: document.getElementById('rsvpSection'),
-            confirmation: document.getElementById('confirmationSection')
-        };
+            if (!alumniId) {
+                alert('Invalid invitation link. Please use the unique QR code provided.');
+                return;
+            }
 
-        function showSection(sectionName) {
-            // Hide all sections
-            Object.values(sections).forEach(section => section.classList.add('hidden'));
-            
-            // Show selected section
-            sections[sectionName].classList.remove('hidden');
-        }
-
-        // Fetch Alumni Data
-        async function fetchAlumniData(alumniId) {
-            try {
-                const alumniDoc = await db.collection('alumni').doc(alumniId).get();
-                if (alumniDoc.exists) {
-                    const alumniData = alumniDoc.data();
+            // Fetch Alumni Details
+            const alumniRef = db.collection('alumni').doc(alumniId);
+            alumniRef.get().then((doc) => {
+                if (doc.exists) {
+                    const alumniData = doc.data();
                     
                     // Populate Welcome Section
-                    document.getElementById('welcomeTitle').textContent = `Welcome back, ${alumniData.name}!`;
-                    document.getElementById('welcomeSubtitle').textContent = alumniData.welcomeMessage || "We are thrilled to celebrate the Enactus legacy with you.";
-                    
-                    // Populate Graduation Badge
-                    const graduationBadge = document.getElementById('graduationBadge');
-                    graduationBadge.textContent = `Enactus Class of ${alumniData.graduationYear}`;
-                    
-                    // Populate RSVP Form
+                    document.getElementById('alumniName').textContent = alumniData.name;
+                    document.getElementById('welcomeMessage').textContent = 
+                        alumniData.welcomeMessage || 
+                        `Welcome back, ${alumniData.name}! We are thrilled to celebrate the Enactus legacy with you.`;
+                    document.getElementById('graduationYear').textContent = 
+                        `Enactus Class of ${alumniData.graduationYear}`;
+
+                    // Pre-fill Form
                     document.getElementById('name').value = alumniData.name;
-                    document.getElementById('email').value = alumniData.email || '';
-                    
-                    showSection('welcome');
+                    document.getElementById('email').value = alumniData.email;
                 } else {
-                    throw new Error('Alumni not found');
+                    alert('Alumni record not found.');
                 }
-            } catch (error) {
-                console.error("Error fetching alumni data:", error);
-                alert('Unable to find alumni information. Please contact support.');
-            }
-        }
+            }).catch((error) => {
+                console.error("Error fetching alumni details:", error);
+                alert('Unable to load alumni information.');
+            });
 
-        // RSVP Submission
-        document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const alumniId = getQueryParam('id');
-            const formData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                mealPreference: document.getElementById('mealPreference').value,
-                notes: document.getElementById('notes').value,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            };
+            // RSVP Form Submission
+            const rsvpForm = document.getElementById('rsvpForm');
+            const rsvpFormSection = document.getElementById('rsvpFormSection');
+            const confirmationSection = document.getElementById('confirmationSection');
 
-            try {
+            rsvpForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const rsvpData = {
+                    alumniId: alumniId,
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    mealPreference: document.getElementById('mealPreference').value,
+                    notes: document.getElementById('notes').value,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
                 // Save RSVP to Firestore
-                await db.collection('rsvps').add(formData);
-                
-                // Update Alumni RSVP Status
-                await db.collection('alumni').doc(alumniId).update({
-                    rsvpStatus: 'confirmed'
-                });
-
-                // Show Confirmation
-                const confirmationDetails = document.getElementById('confirmationDetails');
-                confirmationDetails.innerHTML = `
-                    <p><strong>Name:</strong> ${formData.name}</p>
-                    <p><strong>Email:</strong> ${formData.email}</p>
-                    <p><strong>Meal Preference:</strong> ${formData.mealPreference.charAt(0).toUpperCase() + formData.mealPreference.slice(1)}</p>
-                    ${formData.notes ? `<p><strong>Notes:</strong> ${formData.notes}</p>` : ''}
-                `;
-
-                showSection('confirmation');
-            } catch (error) {
-                console.error("Error submitting RSVP:", error);
-                alert('Failed to submit RSVP. Please try again.');
-            }
-        });
-
-        // Event Listeners
-        document.getElementById('backToWelcome').addEventListener('click', () => showSection('welcome'));
-
-        // Initial Page Load
-        document.addEventListener('DOMContentLoaded', () => {
-            const alumniId = getQueryParam('id');
-            if (alumniId) {
-                fetchAlumniData(alumniId);
-            } else {
-                alert('No alumni ID provided. Please use the correct invitation link.');
-            }
+                db.collection('rsvps').add(rsvpData)
+                    .then(() => {
+                        // Update Alumni RSVP Status
+                        return alumniRef.update({ rsvpStatus: 'confirmed' });
+                    })
+                    .then(() => {
+                        // Show Confirmation
+                        rsvpFormSection.style.display = 'none';
+                        confirmationSection.style.display = 'block';
+                        document.getElementById('confirmationName').textContent = 
+                            `Thank You, ${rsvpData.name}!`;
+                        document.getElementById('confirmationDetails').textContent = 
+                            `We've reserved your seat for a ${rsvpData.mealPreference} meal.`;
+                    })
+                    .catch((error) => {
+                        console.error("Error submitting RSVP:", error);
+                        alert('Unable to submit RSVP. Please try again.');
+                    });
+            });
         });
     </script>
 </body>

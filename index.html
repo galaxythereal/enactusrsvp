@@ -228,7 +228,7 @@
     <div class="reunion-container">
         <div class="branding-panel">
             <img src="/api/placeholder/280/180" alt="Enactus Logo" class="enactus-logo">
-            <h2 class="branding-title">Alumni Reunion</h2>
+            <h2 class="branding-title">Enactus Menoufia Opening</h2>
             <p class="branding-subtitle">
                 Reconnect with purpose. Amplify your entrepreneurial journey with a community that transforms ideas into impactful solutions.
             </p>
@@ -237,16 +237,10 @@
         <div class="rsvp-form-section">
             <div class="welcome-section">
                 <h1 class="alumni-name" id="alumniName">Loading...</h1>
-                <p id="welcomeMessage">Preparing your personalized invitation...</p>
+                <p id="welcomMessage">Preparing your personalized invitation...</p>
                 <span class="graduation-badge" id="graduationYear">Enactus Class</span>
             </div>
 
-            <div class="form-header">
-                <h1 class="form-title">Your Exclusive Invitation</h1>
-                <p class="form-description">
-                    Secure your place at this year's most anticipated Enactus alumni gathering. Your network, your impact, your legacy.
-                </p>
-            </div>
 
             <form id="rsvpForm">
                 <div class="form-group">
@@ -321,7 +315,7 @@
                             alumniData.name || 'Alumni';
                         
                         // Use database welcome message, with a fallback
-                        document.getElementById('welcomeMessage').textContent = 
+                        document.getElementById('welcomMessage').textContent = 
                             alumniData.WelcomMessage || 
                             `Welcome back! We're excited to celebrate with you.`;
                         
@@ -372,7 +366,7 @@
 
             function showErrorMessage(message) {
                 document.getElementById('alumniName').textContent = 'Error';
-                document.getElementById('welcomeMessage').textContent = message;
+                document.getElementById('welcomMessage').textContent = message;
                 document.getElementById('graduationYear').textContent = '';
             }
         });

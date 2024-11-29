@@ -320,8 +320,9 @@
                         document.getElementById('alumniName').textContent = 
                             alumniData.name || 'Alumni';
                         
+                        // Use database welcome message, with a fallback
                         document.getElementById('welcomeMessage').textContent = 
-                            alumniData.welcomeMessage || 
+                            alumniData.WelcomMessage || 
                             `Welcome back! We're excited to celebrate with you.`;
                         
                         document.getElementById('graduationYear').textContent = 

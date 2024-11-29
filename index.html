@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enactus Alumni Reunion RSVP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        .enactus-gradient {
+            background: linear-gradient(135deg, #FFD700 0%, #1E90FF 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center font-sans">
+    <div id="app" class="w-full max-w-md mx-auto p-6">
+        <!-- Welcome Section -->
+        <div id="welcomeSection" class="hidden bg-white shadow-2xl rounded-2xl p-8 text-center enactus-gradient animate-fade-in">
+            <div class="bg-white bg-opacity-90 rounded-xl p-6">
+                <h1 id="welcomeTitle" class="text-3xl font-bold mb-4 text-blue-900"></h1>
+                <p id="welcomeSubtitle" class="text-lg text-gray-700 mb-6"></p>
+                <div id="graduationBadge" class="inline-block bg-yellow-400 text-blue-900 px-4 py-2 rounded-full text-sm font-semibold mb-6"></div>
+            </div>
+        </div>
+
+        <!-- RSVP Form Section -->
+        <div id="rsvpSection" class="hidden bg-white shadow-2xl rounded-2xl p-8 mt-6 animate-fade-in">
+            <form id="rsvpForm" class="space-y-6">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                    <input type="text" id="name" name="name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-300">
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" id="email" name="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-300">
+                </div>
+                <div>
+                    <label for="mealPreference" class="block text-sm font-medium text-gray-700">Meal Preference</label>
+                    <select id="mealPreference" name="mealPreference" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-300">
+                        <option value="chicken">Chicken</option>
+                        <option value="beef">Beef</option>
+                        <option value="vegetarian">Vegetarian</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="notes" class="block text-sm font-medium text-gray-700">Special Notes</label>
+                    <textarea id="notes" name="notes" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-300"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                    Confirm RSVP
+                </button>
+            </form>
+        </div>
+
+        <!-- Confirmation Section -->
+        <div id="confirmationSection" class="hidden bg-white shadow-2xl rounded-2xl p-8 text-center animate-fade-in">
+            <h2 class="text-3xl font-bold text-green-600 mb-4">Thank You!</h2>
+            <div id="confirmationDetails" class="text-gray-700 space-y-3"></div>
+            <a href="#" id="backToWelcome" class="mt-6 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300">
+                Back to Welcome
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Firebase Configuration (Replace with your actual Firebase config)
+const firebaseConfig = {
+
+  apiKey: "AIzaSyDDdhJ31y8R_NSd08yMprlDg2tbQPd4ii0",
+
+  authDomain: "enactusrsvp-3a4c0.firebaseapp.com",
+
+  projectId: "enactusrsvp-3a4c0",
+
+  storageBucket: "enactusrsvp-3a4c0.firebasestorage.app",
+
+  messagingSenderId: "34193606713",
+
+  appId: "1:34193606713:web:f713754817f79b482065e8",
+
+  measurementId: "G-TVK059C0P4"
+
+};
+
+
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Utility Functions
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // Page State Management
+        const sections = {
+            welcome: document.getElementById('welcomeSection'),
+            rsvp: document.getElementById('rsvpSection'),
+            confirmation: document.getElementById('confirmationSection')
+        };
+
+        function showSection(sectionName) {
+            // Hide all sections
+            Object.values(sections).forEach(section => section.classList.add('hidden'));
+            
+            // Show selected section
+            sections[sectionName].classList.remove('hidden');
+        }
+
+        // Fetch Alumni Data
+        async function fetchAlumniData(alumniId) {
+            try {
+                const alumniDoc = await db.collection('alumni').doc(alumniId).get();
+                if (alumniDoc.exists) {
+                    const alumniData = alumniDoc.data();
+                    
+                    // Populate Welcome Section
+                    document.getElementById('welcomeTitle').textContent = `Welcome back, ${alumniData.name}!`;
+                    document.getElementById('welcomeSubtitle').textContent = alumniData.welcomeMessage || "We are thrilled to celebrate the Enactus legacy with you.";
+                    
+                    // Populate Graduation Badge
+                    const graduationBadge = document.getElementById('graduationBadge');
+                    graduationBadge.textContent = `Enactus Class of ${alumniData.graduationYear}`;
+                    
+                    // Populate RSVP Form
+                    document.getElementById('name').value = alumniData.name;
+                    document.getElementById('email').value = alumniData.email || '';
+                    
+                    showSection('welcome');
+                } else {
+                    throw new Error('Alumni not found');
+                }
+            } catch (error) {
+                console.error("Error fetching alumni data:", error);
+                alert('Unable to find alumni information. Please contact support.');
+            }
+        }
+
+        // RSVP Submission
+        document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const alumniId = getQueryParam('id');
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                mealPreference: document.getElementById('mealPreference').value,
+                notes: document.getElementById('notes').value,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            try {
+                // Save RSVP to Firestore
+                await db.collection('rsvps').add(formData);
+                
+                // Update Alumni RSVP Status
+                await db.collection('alumni').doc(alumniId).update({
+                    rsvpStatus: 'confirmed'
+                });
+
+                // Show Confirmation
+                const confirmationDetails = document.getElementById('confirmationDetails');
+                confirmationDetails.innerHTML = `
+                    <p><strong>Name:</strong> ${formData.name}</p>
+                    <p><strong>Email:</strong> ${formData.email}</p>
+                    <p><strong>Meal Preference:</strong> ${formData.mealPreference.charAt(0).toUpperCase() + formData.mealPreference.slice(1)}</p>
+                    ${formData.notes ? `<p><strong>Notes:</strong> ${formData.notes}</p>` : ''}
+                `;
+
+                showSection('confirmation');
+            } catch (error) {
+                console.error("Error submitting RSVP:", error);
+                alert('Failed to submit RSVP. Please try again.');
+            }
+        });
+
+        // Event Listeners
+        document.getElementById('backToWelcome').addEventListener('click', () => showSection('welcome'));
+
+        // Initial Page Load
+        document.addEventListener('DOMContentLoaded', () => {
+            const alumniId = getQueryParam('id');
+            if (alumniId) {
+                fetchAlumniData(alumniId);
+            } else {
+                alert('No alumni ID provided. Please use the correct invitation link.');
+            }
+        });
+    </script>
+</body>
+</html>

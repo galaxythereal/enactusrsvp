@@ -265,16 +265,17 @@ const firebaseConfig = {
   measurementId: "G-TVK059C0P4"
 
 };
-
-// Add this BEFORE your existing script
-console.log("Firebase Config:", firebaseConfig);
+  try {
+    firebase.initializeApp(firebaseConfig);
+    console.log("Firebase initialized successfully");
+  } catch (error) {
+    console.error("Firebase initialization error:", error);
+  }
 
 
 // Enable Firestore logging
 firebase.firestore().enableLogging(true);
-        // Initialize Firebase
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
+
     const db = firebase.firestore();
 
     document.addEventListener('DOMContentLoaded', () => {
